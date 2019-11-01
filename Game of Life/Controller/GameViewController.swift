@@ -32,7 +32,6 @@ class GameViewController: UIViewController {
         
         scene = WorldScene()
         scnView.scene = scene
-        scene?.createGrid()
         
         // allows the user to manipulate the camera
         scnView.allowsCameraControl = true

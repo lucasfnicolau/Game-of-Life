@@ -15,10 +15,11 @@ class WorldScene: SCNScene {
     var gridSize = 0
     var timer: Timer?
     
-    override init() {
+    init(gridSize size: Int = 11) {
         super.init()
         setCamera()
         setLight()
+        createGrid(withSize: size)
     }
     
     required init?(coder: NSCoder) {
@@ -44,7 +45,7 @@ class WorldScene: SCNScene {
         rootNode.addChildNode(lightNode)
     }
     
-    func createGrid(withSize size: Int = 11) {
+    func createGrid(withSize size: Int) {
         gridSize = size
         
         let half = Int(size / 2)

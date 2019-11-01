@@ -14,9 +14,7 @@ class Cell: SCNNode {
     init(withSize size: CGFloat = 1) {
         super.init()
         self.geometry = SCNBox(width: size, height: size, length: size, chamferRadius: 0)
-        guard let geometry = self.geometry,
-        let material = geometry.firstMaterial else { return }
-        material.emission.contents = UIColor.deadCell
+        geometry?.firstMaterial?.emission.contents = UIColor.deadCell
     }
     
     required init?(coder: NSCoder) {
@@ -41,15 +39,12 @@ class Cell: SCNNode {
     }
     
     func setState(to state: CellState) {
-        guard let geometry = self.geometry,
-        let material = geometry.firstMaterial else { return }
-        
         self.state = state
         switch state {
         case .alive:
-            material.emission.contents = UIColor.aliveCell
+            geometry?.firstMaterial?.emission.contents = UIColor.aliveCell
         case .dead:
-            material.emission.contents = UIColor.deadCell
+            geometry?.firstMaterial?.emission.contents = UIColor.deadCell
         default:
             break
         }
