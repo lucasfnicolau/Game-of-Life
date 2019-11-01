@@ -15,6 +15,35 @@ class WorldScene: SCNScene {
     var gridSize = 0
     var timer: Timer?
     
+    override init() {
+        super.init()
+        setCamera()
+        setLight()
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Could not instantiate")
+    }
+    
+    func setCamera() {
+        let camera = SCNCamera()
+        let cameraNode = SCNNode()
+        cameraNode.name = "camera"
+        cameraNode.camera = camera
+        cameraNode.position = SCNVector3(x: 3, y: 25.0, z: 0.0)
+        let angle90: CGFloat = .pi / 2
+        cameraNode.eulerAngles = SCNVector3(angle90, 10, 10)
+        rootNode.addChildNode(cameraNode)
+    }
+    
+    func setLight() {
+        let lightNode = SCNNode()
+        lightNode.light = SCNLight()
+        lightNode.light?.type = .omni
+        lightNode.position = SCNVector3(x: 5, y: -5, z: -5)
+        rootNode.addChildNode(lightNode)
+    }
+    
     func createGrid(withSize size: Int = 11) {
         gridSize = size
         

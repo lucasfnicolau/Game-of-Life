@@ -32,19 +32,7 @@ class GameViewController: UIViewController {
         
         scene = WorldScene()
         scnView.scene = scene
-        
-        let camera = SCNCamera()
-        let cameraNode = SCNNode()
-        cameraNode.name = "camera"
-        cameraNode.camera = camera
-        cameraNode.position = SCNVector3(x: 3, y: 25.0, z: 0.0)
-        let angle90: CGFloat = .pi / 2
-        cameraNode.eulerAngles = SCNVector3(angle90, 10, 10)
-        scene?.rootNode.addChildNode(cameraNode)
-        
         scene?.createGrid()
-        
-        setLight()
         
         // allows the user to manipulate the camera
         scnView.allowsCameraControl = true
@@ -55,14 +43,6 @@ class GameViewController: UIViewController {
         // add a tap gesture recognizer
         let tapGesture = UITapGestureRecognizer(target: self, action: #selector(handleTap(_:)))
         scnView.addGestureRecognizer(tapGesture)
-    }
-    
-    func setLight() {
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light?.type = .omni
-        lightNode.position = SCNVector3(x: 5, y: -5, z: -5)
-        scene?.rootNode.addChildNode(lightNode)
     }
     
     @objc func playPause(_ sender: UIBarButtonItem) {
