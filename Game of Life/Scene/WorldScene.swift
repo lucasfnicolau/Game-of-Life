@@ -31,9 +31,7 @@ class WorldScene: SCNScene {
         let cameraNode = SCNNode()
         cameraNode.name = "camera"
         cameraNode.camera = camera
-        cameraNode.position = SCNVector3(x: 3, y: 25.0, z: 0.0)
-        let angle90: CGFloat = .pi / 2
-        cameraNode.eulerAngles = SCNVector3(angle90, 10, 10)
+        cameraNode.position = SCNVector3(x: 5, y: 4, z: 25.0)
         rootNode.addChildNode(cameraNode)
     }
     
@@ -41,7 +39,7 @@ class WorldScene: SCNScene {
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
         lightNode.light?.type = .omni
-        lightNode.position = SCNVector3(x: 5, y: -5, z: -5)
+        lightNode.position = SCNVector3(x: 5, y: 5, z: -5)
         rootNode.addChildNode(lightNode)
     }
     
@@ -55,7 +53,7 @@ class WorldScene: SCNScene {
             cells.append([])
             for j in 0 ..< size {
                 let cell = Cell()
-                cell.position = SCNVector3(Double(i) * 1.15, 0, Double(j) * 1.15)
+                cell.position = SCNVector3(Double(i) * 1.15, Double(j) * 1.15, 0)
                 self.rootNode.addChildNode(cell)
                 
                 if i == half && j == half {
@@ -76,7 +74,7 @@ class WorldScene: SCNScene {
     }
     
     func initGeneration() {
-        timer = Timer.scheduledTimer(timeInterval: 0.35, target: self, selector: #selector(initNewGeneration), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.20, target: self, selector: #selector(initNewGeneration), userInfo: nil, repeats: true)
         timer?.fire()
     }
     
