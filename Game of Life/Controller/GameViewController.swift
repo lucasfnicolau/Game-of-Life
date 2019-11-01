@@ -89,10 +89,8 @@ class GameViewController: UIViewController {
         // check that we clicked on at least one object
         if hitResults.count > 0 {
             let result = hitResults[0]
-            guard let node = result.node as? Cell else { return }
-            let (i, j) = scene?.findIndex(of: node) ?? (0, 0)
-            let cell = scene?.cells[i][j]
-            cell?.changeState()
+            guard let cell = result.node as? Cell else { return }
+            cell.changeState()
         }
     }
     

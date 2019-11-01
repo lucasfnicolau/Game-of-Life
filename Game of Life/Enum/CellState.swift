@@ -8,7 +8,7 @@
 
 import Foundation
 
-enum CellState: Int {
+enum CellState {
     case alive
     case dead
     case undefined

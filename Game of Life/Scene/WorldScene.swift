@@ -63,32 +63,11 @@ class WorldScene: SCNScene {
         for i in 0 ..< gridSize {
             nextGeneration.append([])
             for j in 0 ..< gridSize {
-                nextGeneration[i].append(newState(for: cells[i][j]))
+                nextGeneration[i].append(cells[i][j].newState(basedOn: cells))
             }
         }
         
         updateCells()
-    }
-    
-    func newState(for cell: Cell) -> CellState {
-        let neighbours = getNeighbours(of: cell)
-        let alives = neighbours.filter { (cell) -> Bool in
-            cell.state == .alive
-        }
-        
-        if cell.state == .alive {
-            if alives.count < 2 || alives.count >= 4 {
-                return .dead
-            } else {
-                return .alive
-            }
-        } else {
-            if alives.count == 3 {
-                return .alive
-            } else {
-                return .dead
-            }
-        }
     }
     
     func updateCells() {
@@ -97,17 +76,6 @@ class WorldScene: SCNScene {
                 cells[i][j].setState(to: nextGeneration[i][j])
             }
         }
-    }
-    
-    func findIndex(of cell: Cell) -> (Int, Int) {
-        for i in 0 ..< cells.count {
-            for j in 0 ..< cells[i].count {
-                if cell == cells[i][j] {
-                    return (i, j)
-                }
-            }
-        }
-        return (-1, -1)
     }
     
     func pause() {
@@ -121,46 +89,5 @@ class WorldScene: SCNScene {
                 cells[i][j].setState(to: .dead)
             }
         }
-    }
-    
-    func getNeighbours(of cell: Cell) -> [Cell] {
-        let (i, j) = findIndex(of: cell)
-        if i == -1 || j == -1 { return [] }
-        
-        var neighbours = [Cell]()
-        
-        if i - 1 >= 0 {
-            neighbours.append(cells[i - 1][j])
-        }
-        
-        if i + 1 < cells.count {
-            neighbours.append(cells[i + 1][j])
-        }
-        
-        if j - 1 >= 0 {
-            neighbours.append(cells[i][j - 1])
-        }
-        
-        if j + 1 < cells[i].count {
-            neighbours.append(cells[i][j + 1])
-        }
-        
-        if i - 1 >= 0 && j - 1 >= 0 {
-            neighbours.append(cells[i - 1][j - 1])
-        }
-        
-        if i + 1 < cells.count && j - 1 >= 0 {
-            neighbours.append(cells[i + 1][j - 1])
-        }
-        
-        if i - 1 >= 0 && j + 1 < cells[i].count {
-            neighbours.append(cells[i - 1][j + 1])
-        }
-        
-        if i + 1 < cells.count && j + 1 < cells[i].count {
-            neighbours.append(cells[i + 1][j + 1])
-        }
-        
-        return neighbours
     }
 }
