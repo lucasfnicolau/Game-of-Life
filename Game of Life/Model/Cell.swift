@@ -22,17 +22,14 @@ class Cell: SCNNode {
     }
     
     func changeState() {
-        guard let geometry = self.geometry,
-            let material = geometry.firstMaterial else { return }
-        
         switch state {
         case .alive:
             state = .dead
-            material.emission.contents = UIColor.deadCell
+            geometry?.firstMaterial?.emission.contents = UIColor.deadCell
 //            self.position.z = 0
         case .dead:
             state = .alive
-            material.emission.contents = UIColor.aliveCell
+            geometry?.firstMaterial?.emission.contents = UIColor.aliveCell
 //            self.position.z = 1
         default:
             break

@@ -10,7 +10,6 @@ import SceneKit
 
 class WorldScene: SCNScene {
     var cells = [[Cell]]()
-    var currentGeneration = [[CellState]]()
     var nextGeneration = [[CellState]]()
     var gridSize = 0
     var timer: Timer?
@@ -79,14 +78,6 @@ class WorldScene: SCNScene {
     }
     
     @objc func initNewGeneration() {
-        currentGeneration = []
-        for i in 0 ..< gridSize {
-            currentGeneration.append([])
-            for j in 0 ..< gridSize {
-                currentGeneration[i].append(cells[i][j].state)
-            }
-        }
-        
         nextGeneration = []
         for i in 0 ..< gridSize {
             nextGeneration.append([])
