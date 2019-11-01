@@ -1,29 +1,53 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="iv5-ot-aHY">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14868" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="eY1-b4-JQw">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14824"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Prata-->
+        <!--Game View Controller-->
         <scene sceneID="ydg-NY-hBw">
             <objects>
                 <viewController id="iv5-ot-aHY" customClass="GameViewController" customModule="Game_of_Life" customModuleProvider="target" sceneMemberID="viewController">
                     <sceneKitView key="view" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" id="IVe-jO-d6P">
-                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="808"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     </sceneKitView>
-                    <tabBarItem key="tabBarItem" title="Prata" image="circle" catalog="system" selectedImage="circle.fill" id="Kqu-mz-zad"/>
+                    <navigationItem key="navigationItem" id="lve-mm-M4K">
+                        <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="AGR-PD-A7a">
+                            <color key="tintColor" red="0.85490196078431369" green="0.25098039215686274" blue="0.47843137254901957" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="restart" destination="iv5-ot-aHY" id="PoU-6b-crg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <outlet property="restartButton" destination="AGR-PD-A7a" id="Y6n-sA-6G9"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4xK-xV-G5l" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1083" y="96"/>
+            <point key="canvasLocation" x="983" y="96"/>
+        </scene>
+        <!--Navigation Controller-->
+        <scene sceneID="kiG-H4-ZeH">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="eY1-b4-JQw" sceneMemberID="viewController">
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" barStyle="black" translucent="NO" id="EAd-b1-R9U">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="iv5-ot-aHY" kind="relationship" relationship="rootViewController" id="B8t-cQ-fGV"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="ZY3-LI-FPc" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="74" y="96"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="circle" catalog="system" width="64" height="62"/>
-        <image name="circle.fill" catalog="system" width="64" height="62"/>
-    </resources>
 </document>

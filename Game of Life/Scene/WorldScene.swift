@@ -10,12 +10,39 @@ import SceneKit
 
 class WorldScene: SCNScene {
     var cells = [[Cell]]()
-    var currentGeneration = [[CellState]]()
     var nextGeneration = [[CellState]]()
     var gridSize = 0
     var timer: Timer?
     
-    func createGrid(withSize size: Int = 11) {
+    init(gridSize size: Int = 11) {
+        super.init()
+        setCamera()
+        setLight()
+        createGrid(withSize: size)
+    }
+    
+    required init?(coder: NSCoder) {
+        fatalError("Could not instantiate")
+    }
+    
+    func setCamera() {
+        let camera = SCNCamera()
+        let cameraNode = SCNNode()
+        cameraNode.name = "camera"
+        cameraNode.camera = camera
+        cameraNode.position = SCNVector3(x: 5, y: 4, z: 25.0)
+        rootNode.addChildNode(cameraNode)
+    }
+    
+    func setLight() {
+        let lightNode = SCNNode()
+        lightNode.light = SCNLight()
+        lightNode.light?.type = .omni
+        lightNode.position = SCNVector3(x: 5, y: 5, z: -5)
+        rootNode.addChildNode(lightNode)
+    }
+    
+    func createGrid(withSize size: Int) {
         gridSize = size
         
         let half = Int(size / 2)
@@ -25,7 +52,7 @@ class WorldScene: SCNScene {
             cells.append([])
             for j in 0 ..< size {
                 let cell = Cell()
-                cell.position = SCNVector3(Double(i) * 1.15, 0, Double(j) * 1.15)
+                cell.position = SCNVector3(Double(i) * 1.15, Double(j) * 1.15, 0)
                 self.rootNode.addChildNode(cell)
                 
                 if i == half && j == half {
@@ -46,49 +73,20 @@ class WorldScene: SCNScene {
     }
     
     func initGeneration() {
-        timer = Timer.scheduledTimer(timeInterval: 0.35, target: self, selector: #selector(initNewGeneration), userInfo: nil, repeats: true)
+        timer = Timer.scheduledTimer(timeInterval: 0.20, target: self, selector: #selector(initNewGeneration), userInfo: nil, repeats: true)
         timer?.fire()
     }
     
     @objc func initNewGeneration() {
-        currentGeneration = []
-        for i in 0 ..< gridSize {
-            currentGeneration.append([])
-            for j in 0 ..< gridSize {
-                currentGeneration[i].append(cells[i][j].state)
-            }
-        }
-        
         nextGeneration = []
         for i in 0 ..< gridSize {
             nextGeneration.append([])
             for j in 0 ..< gridSize {
-                nextGeneration[i].append(newState(for: cells[i][j]))
+                nextGeneration[i].append(cells[i][j].newState(basedOn: cells))
             }
         }
         
         updateCells()
-    }
-    
-    func newState(for cell: Cell) -> CellState {
-        let neighbours = getNeighbours(of: cell)
-        let alives = neighbours.filter { (cell) -> Bool in
-            cell.state == .alive
-        }
-        
-        if cell.state == .alive {
-            if alives.count < 2 || alives.count >= 4 {
-                return .dead
-            } else {
-                return .alive
-            }
-        } else {
-            if alives.count == 3 {
-                return .alive
-            } else {
-                return .dead
-            }
-        }
     }
     
     func updateCells() {
@@ -99,55 +97,16 @@ class WorldScene: SCNScene {
         }
     }
     
-    func findIndex(of cell: Cell) -> (Int, Int) {
-        for i in 0 ..< cells.count {
-            for j in 0 ..< cells[i].count {
-                if cell == cells[i][j] {
-                    return (i, j)
-                }
-            }
-        }
-        return (-1, -1)
+    func pause() {
+        timer?.invalidate()
     }
     
-    func getNeighbours(of cell: Cell) -> [Cell] {
-        let (i, j) = findIndex(of: cell)
-        if i == -1 || j == -1 { return [] }
-        
-        var neighbours = [Cell]()
-        
-        if i - 1 >= 0 {
-            neighbours.append(cells[i - 1][j])
+    func restart() {
+        timer?.invalidate()
+        for i in 0 ..< gridSize {
+            for j in 0 ..< gridSize {
+                cells[i][j].setState(to: .dead)
+            }
         }
-        
-        if i + 1 < cells.count {
-            neighbours.append(cells[i + 1][j])
-        }
-        
-        if j - 1 >= 0 {
-            neighbours.append(cells[i][j - 1])
-        }
-        
-        if j + 1 < cells[i].count {
-            neighbours.append(cells[i][j + 1])
-        }
-        
-        if i - 1 >= 0 && j - 1 >= 0 {
-            neighbours.append(cells[i - 1][j - 1])
-        }
-        
-        if i + 1 < cells.count && j - 1 >= 0 {
-            neighbours.append(cells[i + 1][j - 1])
-        }
-        
-        if i - 1 >= 0 && j + 1 < cells[i].count {
-            neighbours.append(cells[i - 1][j + 1])
-        }
-        
-        if i + 1 < cells.count && j + 1 < cells[i].count {
-            neighbours.append(cells[i + 1][j + 1])
-        }
-        
-        return neighbours
     }
 }

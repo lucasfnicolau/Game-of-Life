@@ -14,29 +14,24 @@ import Foundation
 class GameViewController: UIViewController {
 
     var scene: WorldScene?
+    var playButton: UIBarButtonItem!
+    var pauseButton: UIBarButtonItem!
+    @IBOutlet weak var restartButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        playButton = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(playPause(_:)))
+        playButton.tintColor = .aliveCell
+        navigationItem.rightBarButtonItem = playButton
+        pauseButton = UIBarButtonItem(barButtonSystemItem: .pause, target: self, action: #selector(playPause(_:)))
+        pauseButton.tintColor = .aliveCell
+        pauseButton.tag = 1
         
         guard let scnView = self.view as? SCNView else { return }
         
         scene = WorldScene()
         scnView.scene = scene
-        
-        let camera = SCNCamera()
-        let cameraNode = SCNNode()
-        cameraNode.name = "camera"
-        cameraNode.camera = camera
-        cameraNode.position = SCNVector3(x: 3, y: 25.0, z: 0.0)
-        let angle90: CGFloat = .pi / 2
-        cameraNode.eulerAngles = SCNVector3(angle90, 10, 10)
-        scene?.rootNode.addChildNode(cameraNode)
-        
-        scene?.createGrid()
-        
-        setLight()
-        
-        setButtons()
         
         // allows the user to manipulate the camera
         scnView.allowsCameraControl = true
@@ -49,24 +44,19 @@ class GameViewController: UIViewController {
         scnView.addGestureRecognizer(tapGesture)
     }
     
-    func setButtons() {
-        guard let scnView = self.view as? SCNView else { return }
-        let playBtn = UIButton(frame: CGRect(x: 20, y: 20, width: 75, height: 75))
-        playBtn.setImage(UIImage(named: "play"), for: .normal)
-        playBtn.addTarget(self, action: #selector(begin), for: .touchUpInside)
-        scnView.addSubview(playBtn)
+    @objc func playPause(_ sender: UIBarButtonItem) {
+        if sender.tag == 0 {
+            navigationItem.rightBarButtonItem = pauseButton
+            scene?.initGeneration()
+        } else {
+            navigationItem.rightBarButtonItem = playButton
+            scene?.pause()
+        }
     }
     
-    func setLight() {
-        let lightNode = SCNNode()
-        lightNode.light = SCNLight()
-        lightNode.light?.type = .omni
-        lightNode.position = SCNVector3(x: 5, y: -5, z: -5)
-        scene?.rootNode.addChildNode(lightNode)
-    }
-    
-    @objc func begin() {
-        scene?.initGeneration()
+    @IBAction func restart() {
+        navigationItem.rightBarButtonItem = playButton
+        scene?.restart()
     }
     
     @objc func handleTap(_ gestureRecognize: UIGestureRecognizer) {
@@ -78,18 +68,12 @@ class GameViewController: UIViewController {
         // check that we clicked on at least one object
         if hitResults.count > 0 {
             let result = hitResults[0]
-            guard let node = result.node as? Cell else { return }
-            let (i, j) = scene?.findIndex(of: node) ?? (0, 0)
-            let cell = scene?.cells[i][j]
-            cell?.changeState()
+            guard let cell = result.node as? Cell else { return }
+            cell.changeState()
         }
     }
     
     override var shouldAutorotate: Bool {
-        return true
-    }
-    
-    override var prefersStatusBarHidden: Bool {
         return true
     }
     

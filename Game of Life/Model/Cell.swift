@@ -14,9 +14,7 @@ class Cell: SCNNode {
     init(withSize size: CGFloat = 1) {
         super.init()
         self.geometry = SCNBox(width: size, height: size, length: size, chamferRadius: 0)
-        guard let geometry = self.geometry,
-        let material = geometry.firstMaterial else { return }
-        material.emission.contents = UIColor.deadCell
+        geometry?.firstMaterial?.emission.contents = UIColor.deadCell
     }
     
     required init?(coder: NSCoder) {
@@ -24,33 +22,104 @@ class Cell: SCNNode {
     }
     
     func changeState() {
-        guard let geometry = self.geometry,
-            let material = geometry.firstMaterial else { return }
-        
         switch state {
         case .alive:
             state = .dead
-            material.emission.contents = UIColor.deadCell
+            geometry?.firstMaterial?.emission.contents = UIColor.deadCell
+//            self.position.z = 0
         case .dead:
             state = .alive
-            material.emission.contents = UIColor.aliveCell
+            geometry?.firstMaterial?.emission.contents = UIColor.aliveCell
+//            self.position.z = 1
         default:
             break
         }
     }
     
     func setState(to state: CellState) {
-        guard let geometry = self.geometry,
-        let material = geometry.firstMaterial else { return }
-        
         self.state = state
         switch state {
         case .alive:
-            material.emission.contents = UIColor.aliveCell
+            geometry?.firstMaterial?.emission.contents = UIColor.aliveCell
+//            self.position.z = 1
         case .dead:
-            material.emission.contents = UIColor.deadCell
+            geometry?.firstMaterial?.emission.contents = UIColor.deadCell
+//            self.position.z = 0
         default:
             break
         }
+    }
+    
+    func newState(basedOn cells: [[Cell]]) -> CellState {
+        let neighbours = self.getNeighbours(on: cells)
+        let alives = neighbours.filter { (cell) -> Bool in
+            cell.state == .alive
+        }
+        
+        if self.state == .alive {
+            if alives.count < 2 || alives.count >= 4 {
+                return .dead
+            } else {
+                return .alive
+            }
+        } else {
+            if alives.count == 3 {
+                return .alive
+            } else {
+                return .dead
+            }
+        }
+    }
+    
+    func getNeighbours(on cells: [[Cell]]) -> [Cell] {
+        let (i, j) = self.findIndex(on: cells)
+        if i == -1 || j == -1 { return [] }
+        
+        var neighbours = [Cell]()
+        
+        if i - 1 >= 0 {
+            neighbours.append(cells[i - 1][j])
+        }
+        
+        if i + 1 < cells.count {
+            neighbours.append(cells[i + 1][j])
+        }
+        
+        if j - 1 >= 0 {
+            neighbours.append(cells[i][j - 1])
+        }
+        
+        if j + 1 < cells[i].count {
+            neighbours.append(cells[i][j + 1])
+        }
+        
+        if i - 1 >= 0 && j - 1 >= 0 {
+            neighbours.append(cells[i - 1][j - 1])
+        }
+        
+        if i + 1 < cells.count && j - 1 >= 0 {
+            neighbours.append(cells[i + 1][j - 1])
+        }
+        
+        if i - 1 >= 0 && j + 1 < cells[i].count {
+            neighbours.append(cells[i - 1][j + 1])
+        }
+        
+        if i + 1 < cells.count && j + 1 < cells[i].count {
+            neighbours.append(cells[i + 1][j + 1])
+        }
+        
+        return neighbours
+    }
+    
+    func findIndex(on cells: [[Cell]]) -> (Int, Int) {
+        for i in 0 ..< cells.count {
+            for j in 0 ..< cells[i].count {
+                if self == cells[i][j] {
+                    return (i, j)
+                }
+            }
+        }
+        return (-1, -1)
     }
 }
