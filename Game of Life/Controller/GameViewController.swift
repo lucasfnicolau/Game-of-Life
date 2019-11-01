@@ -14,9 +14,19 @@ import Foundation
 class GameViewController: UIViewController {
 
     var scene: WorldScene?
+    var playButton: UIBarButtonItem!
+    var pauseButton: UIBarButtonItem!
+    @IBOutlet weak var restartButton: UIBarButtonItem!
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        playButton = UIBarButtonItem(barButtonSystemItem: .play, target: self, action: #selector(playPause(_:)))
+        playButton.tintColor = .aliveCell
+        navigationItem.rightBarButtonItem = playButton
+        pauseButton = UIBarButtonItem(barButtonSystemItem: .pause, target: self, action: #selector(playPause(_:)))
+        pauseButton.tintColor = .aliveCell
+        pauseButton.tag = 1
         
         guard let scnView = self.view as? SCNView else { return }
         
@@ -36,8 +46,6 @@ class GameViewController: UIViewController {
         
         setLight()
         
-        setButtons()
-        
         // allows the user to manipulate the camera
         scnView.allowsCameraControl = true
         
@@ -49,14 +57,6 @@ class GameViewController: UIViewController {
         scnView.addGestureRecognizer(tapGesture)
     }
     
-    func setButtons() {
-        guard let scnView = self.view as? SCNView else { return }
-        let playBtn = UIButton(frame: CGRect(x: 20, y: 20, width: 75, height: 75))
-        playBtn.setImage(UIImage(named: "play"), for: .normal)
-        playBtn.addTarget(self, action: #selector(begin), for: .touchUpInside)
-        scnView.addSubview(playBtn)
-    }
-    
     func setLight() {
         let lightNode = SCNNode()
         lightNode.light = SCNLight()
@@ -65,8 +65,19 @@ class GameViewController: UIViewController {
         scene?.rootNode.addChildNode(lightNode)
     }
     
-    @objc func begin() {
-        scene?.initGeneration()
+    @objc func playPause(_ sender: UIBarButtonItem) {
+        if sender.tag == 0 {
+            navigationItem.rightBarButtonItem = pauseButton
+            scene?.initGeneration()
+        } else {
+            navigationItem.rightBarButtonItem = playButton
+            scene?.pause()
+        }
+    }
+    
+    @IBAction func restart() {
+        navigationItem.rightBarButtonItem = playButton
+        scene?.restart()
     }
     
     @objc func handleTap(_ gestureRecognize: UIGestureRecognizer) {

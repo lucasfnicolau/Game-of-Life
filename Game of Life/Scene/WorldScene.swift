@@ -110,6 +110,19 @@ class WorldScene: SCNScene {
         return (-1, -1)
     }
     
+    func pause() {
+        timer?.invalidate()
+    }
+    
+    func restart() {
+        timer?.invalidate()
+        for i in 0 ..< gridSize {
+            for j in 0 ..< gridSize {
+                cells[i][j].setState(to: .dead)
+            }
+        }
+    }
+    
     func getNeighbours(of cell: Cell) -> [Cell] {
         let (i, j) = findIndex(of: cell)
         if i == -1 || j == -1 { return [] }
