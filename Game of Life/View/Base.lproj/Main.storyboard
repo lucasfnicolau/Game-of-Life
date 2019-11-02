@@ -16,12 +16,25 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                     </sceneKitView>
                     <navigationItem key="navigationItem" id="lve-mm-M4K">
+                        <nil key="title"/>
                         <barButtonItem key="leftBarButtonItem" systemItem="refresh" id="AGR-PD-A7a">
                             <color key="tintColor" red="0.85490196078431369" green="0.25098039215686274" blue="0.47843137254901957" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                             <connections>
                                 <action selector="restart" destination="iv5-ot-aHY" id="PoU-6b-crg"/>
                             </connections>
                         </barButtonItem>
+                        <segmentedControl key="titleView" opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="bar" selectedSegmentIndex="0" id="6bc-Xr-i69">
+                            <rect key="frame" x="113" y="5.5" width="188" height="33"/>
+                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <segments>
+                                <segment title="Bronze"/>
+                                <segment title="Prata"/>
+                                <segment title="Ouro"/>
+                            </segments>
+                            <connections>
+                                <action selector="challengeChanged:" destination="iv5-ot-aHY" eventType="valueChanged" id="EKT-PH-2r7"/>
+                            </connections>
+                        </segmentedControl>
                     </navigationItem>
                     <connections>
                         <outlet property="restartButton" destination="AGR-PD-A7a" id="Y6n-sA-6G9"/>

@@ -11,6 +11,14 @@ import QuartzCore
 import SceneKit
 import Foundation
 
+enum Challenge: Int {
+    case bronze = 0
+    case prata
+    case ouro
+}
+
+var challenge: Challenge = .bronze
+
 class GameViewController: UIViewController {
 
     var scene: WorldScene?
@@ -71,6 +79,11 @@ class GameViewController: UIViewController {
             guard let cell = result.node as? Cell else { return }
             cell.changeState()
         }
+    }
+    
+    @IBAction func challengeChanged(_ sender: UISegmentedControl) {
+        challenge = Challenge(rawValue: sender.selectedSegmentIndex) ?? .bronze
+        restart()
     }
     
     override var shouldAutorotate: Bool {

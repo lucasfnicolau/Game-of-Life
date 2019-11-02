@@ -10,9 +10,11 @@ import SceneKit
 
 class WorldScene: SCNScene {
     var cells = [[Cell]]()
+    var currentGeneration = 0
     var nextGeneration = [[CellState]]()
     var gridSize = 0
     var timer: Timer?
+    var zPosition: Double = 0
     
     init(gridSize size: Int = 11) {
         super.init()
@@ -47,19 +49,27 @@ class WorldScene: SCNScene {
         
         let half = Int(size / 2)
         var centerCell = Cell()
+        cells = []
         
         for i in 0 ..< size {
             cells.append([])
             for j in 0 ..< size {
                 let cell = Cell()
-                cell.position = SCNVector3(Double(i) * 1.15, Double(j) * 1.15, 0)
-                self.rootNode.addChildNode(cell)
+                cell.position = SCNVector3(Double(i) * 1.15, Double(j) * 1.15, zPosition * 1.15)
+                
+                if currentGeneration == 0 {
+                    self.rootNode.addChildNode(cell)
+                } else {
+                    cell.setState(to: nextGeneration[i][j])
+                    if cell.state == .alive {
+                        self.rootNode.addChildNode(cell)
+                    }
+                }
+                cells[i].append(cell)
                 
                 if i == half && j == half {
                     centerCell = cell
                 }
-                
-                cells[i].append(cell)
             }
         }
         centerCamera(basedOn: centerCell)
@@ -86,7 +96,13 @@ class WorldScene: SCNScene {
             }
         }
         
-        updateCells()
+        if challenge != .bronze {
+            zPosition += 1
+            currentGeneration += 1
+            createGrid(withSize: gridSize)
+        } else {
+            updateCells()
+        }
     }
     
     func updateCells() {
@@ -102,11 +118,14 @@ class WorldScene: SCNScene {
     }
     
     func restart() {
-        timer?.invalidate()
-        for i in 0 ..< gridSize {
-            for j in 0 ..< gridSize {
-                cells[i][j].setState(to: .dead)
+        rootNode.childNodes.forEach { (node) in
+            if node is Cell {
+                node.removeFromParentNode()
             }
         }
+        currentGeneration = 0
+        zPosition = 0
+        timer?.invalidate()
+        createGrid(withSize: gridSize)
     }
 }
