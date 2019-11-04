@@ -43,6 +43,9 @@ class GameViewController: UIViewController {
         
         // allows the user to manipulate the camera
         scnView.allowsCameraControl = true
+        scnView.defaultCameraController.inertiaEnabled = true
+        scnView.defaultCameraController.maximumVerticalAngle = 89
+        scnView.defaultCameraController.minimumVerticalAngle = -89
         
         // configure the view
         scnView.backgroundColor = UIColor.black

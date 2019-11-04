@@ -26,11 +26,9 @@ class Cell: SCNNode {
         case .alive:
             state = .dead
             geometry?.firstMaterial?.emission.contents = UIColor.deadCell
-//            self.position.z = 0
         case .dead:
             state = .alive
             geometry?.firstMaterial?.emission.contents = UIColor.aliveCell
-//            self.position.z = 1
         default:
             break
         }
@@ -41,10 +39,8 @@ class Cell: SCNNode {
         switch state {
         case .alive:
             geometry?.firstMaterial?.emission.contents = UIColor.aliveCell
-//            self.position.z = 1
         case .dead:
             geometry?.firstMaterial?.emission.contents = UIColor.deadCell
-//            self.position.z = 0
         default:
             break
         }
