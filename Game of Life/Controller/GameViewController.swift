@@ -85,13 +85,7 @@ class GameViewController: UIViewController {
     }
     
     @IBAction func challengeChanged(_ sender: UISegmentedControl) {
-        guard let scnView = self.view as? SCNView else { return }
         challenge = Challenge(rawValue: sender.selectedSegmentIndex) ?? .bronze
-        if challenge == .bronze {
-            scnView.defaultCameraController.interactionMode = .pan
-        } else {
-            scnView.defaultCameraController.interactionMode = .orbitTurntable
-        }
         restart()
     }
     
