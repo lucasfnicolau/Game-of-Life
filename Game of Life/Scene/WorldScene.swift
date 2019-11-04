@@ -16,7 +16,7 @@ class WorldScene: SCNScene {
     var timer: Timer?
     var zPosition: Double = 0
     
-    init(gridSize size: Int = 11) {
+    init(gridSize size: Int = 15) {
         super.init()
         setCamera()
         setLight()
@@ -61,9 +61,11 @@ class WorldScene: SCNScene {
                     self.rootNode.addChildNode(cell)
                 } else {
                     cell.setState(to: nextGeneration[i][j])
-                    if cell.state == .alive {
-                        self.rootNode.addChildNode(cell)
+                    if cell.state == .dead {
+                        cell.geometry?.firstMaterial?.emission.contents = UIColor.clear
+                        cell.geometry?.firstMaterial?.fillMode = .lines
                     }
+                    self.rootNode.addChildNode(cell)
                 }
                 cells[i].append(cell)
                 
