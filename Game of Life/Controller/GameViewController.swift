@@ -35,6 +35,7 @@ class GameViewController: UIViewController {
         
         // allows the user to manipulate the camera
         scnView.allowsCameraControl = true
+        scnView.defaultCameraController.interactionMode = .pan
         
         // configure the view
         scnView.backgroundColor = UIColor.black
