@@ -61,9 +61,19 @@ class WorldScene: SCNScene {
                     self.rootNode.addChildNode(cell)
                 } else {
                     cell.setState(to: nextGeneration[i][j])
-                    if cell.state == .alive {
+                    
+                    if challenge == .prata {
+                        if cell.state == .alive {
+                            self.rootNode.addChildNode(cell)
+                        }
+                    } else if challenge == .ouro {
+                        if cell.state == .dead {
+                            cell.geometry?.firstMaterial?.fillMode = .lines
+                            cell.geometry?.firstMaterial?.emission.contents = UIColor.clear
+                        }
                         self.rootNode.addChildNode(cell)
                     }
+                    
                 }
                 cells[i].append(cell)
                 
